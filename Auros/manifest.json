@@ -2,7 +2,7 @@
   "name": "Auros",
   "short_name": "Auros",
   "description": "Audio training environment",
-  "start_url": "Auros_V7.html",
+  "start_url": "index.html",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0d1410",
