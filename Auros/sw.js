@@ -1,6 +1,6 @@
-const CACHE = "auros-v7";
+const CACHE = "auros-v8";
 const FILES = [
-  "Auros_V7.html",
+  "index.html",
   "manifest.json"
 ];
 

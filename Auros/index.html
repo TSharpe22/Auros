@@ -433,13 +433,13 @@ function $(id){return document.getElementById(id)}
 let AC=null,masterGain=null;const _irC=new Map();
 function ac(){if(!AC){AC=new(window.AudioContext||window.webkitAudioContext)();masterGain=AC.createGain();masterGain.gain.value=gVol();masterGain.connect(AC.destination)}if(AC.state==='suspended')AC.resume();return AC}
 function gVol(){return parseInt($('gVol').value)/100}
-let _ka=null;
-function startKA(){if(_ka)return;_ka=new Audio();_ka.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';_ka.loop=true;_ka.volume=0.001;_ka.play().catch(()=>{})}
-function stopKA(){if(_ka){_ka.pause();_ka=null}}
+let _ka=null,_kaHB=null;
+function startKA(){if(_ka)return;_ka=new Audio();_ka.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';_ka.loop=true;_ka.volume=0.001;_ka.play().catch(()=>{});if('mediaSession' in navigator)navigator.mediaSession.playbackState='playing';if(!_kaHB)_kaHB=setInterval(()=>{if(_ka&&_ka.paused)_ka.play().catch(()=>{});if(AC&&AC.state==='suspended')AC.resume()},10000)}
+function stopKA(){if(_ka){_ka.pause();_ka=null}if(_kaHB){clearInterval(_kaHB);_kaHB=null}if('mediaSession' in navigator)navigator.mediaSession.playbackState='none'}
 let _wl=null;
 async function reqWL(){if(!('wakeLock' in navigator))return;try{_wl=await navigator.wakeLock.request('screen')}catch(e){}}
 async function relWL(){if(_wl){try{await _wl.release()}catch(e){}_wl=null}}
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&AC)AC.resume();if(document.visibilityState==='visible'&&anyRun())reqWL()});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){if(AC)AC.resume();if(anyRun())reqWL();if(_ka&&_ka.paused)_ka.play().catch(()=>{})}else{if(anyRun()&&_ka&&_ka.paused)_ka.play().catch(()=>{})}});
 const unlockEl=$('unlock');
 function doUnlock(){ac();startKA();unlockEl.classList.add('hidden');setTimeout(()=>unlockEl.style.display='none',500)}
 unlockEl.addEventListener('click',doUnlock);unlockEl.addEventListener('touchend',e=>{e.preventDefault();doUnlock()});
